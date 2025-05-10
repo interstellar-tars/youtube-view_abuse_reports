@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CommentSentinel Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+  <style>
+    :root {
+      --bg: #0e1012;
+      --fg: #f1f1f1;
+      --accent: #1e90ff;
+      --error: #ff4c4c;
+      --card-bg: #1c1f24;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: var(--card-bg);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: var(--accent);
+    }
+
+    .container {
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .card h2 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.2rem;
+    }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-error {
+      background: var(--error);
+      color: white;
+    }
+
+    .controls {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .log {
+      font-family: monospace;
+      background: #111315;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      max-height: 200px;
+      overflow-y: auto;
+      font-size: 0.85rem;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      background: #14171a;
+      padding: 1rem;
+      gap: 2rem;
+    }
+
+    nav a {
+      color: var(--fg);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><i class="fas fa-shield-alt"></i> CommentSentinel</h1>
+    <div>
+      <button class="btn btn-accent" onclick="startNewScan()">
+        <i class="fas fa-plus-circle"></i> New Scan
+      </button>
+    </div>
+  </header>
+
+  <nav>
+    <a href="/scans"><i class="fas fa-history"></i> All Scans</a>
+    <a href="/issues"><i class="fas fa-bug"></i> Flagged Issues</a>
+  </nav>
+
+  <main class="container" id="scan-container">
+    <!-- Dynamic scan cards will be inserted here -->
+  </main>
+
+  <script>
+    function startNewScan() {
+      const id = 'scan_' + Date.now();
+      const container = document.getElementById('scan-container');
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <h2><i class="fas fa-spinner fa-spin"></i> Active Scan - ${id}</h2>
+        <div class="controls">
+          <button class="btn btn-accent" onclick="pauseScan('${id}')">Pause</button>
+          <button class="btn btn-accent" onclick="resumeScan('${id}')">Resume</button>
+          <button class="btn btn-error" onclick="cancelScan('${id}')">Cancel</button>
+        </div>
+        <div class="log" id="log-${id}">
+          [${new Date().toLocaleTimeString()}] Scan started...
+        </div>
+      `;
+      container.prepend(card);
+    }
+
+    function pauseScan(id) {
+      const log = document.getElementById(`log-${id}`);
+      log.innerHTML += `\n[${new Date().toLocaleTimeString()}] Scan paused.`;
+    }
+
+    function resumeScan(id) {
+      const log = document.getElementById(`log-${id}`);
+      log.innerHTML += `\n[${new Date().toLocaleTimeString()}] Scan resumed.`;
+    }
+
+    function cancelScan(id) {
+      const log = document.getElementById(`log-${id}`);
+      log.innerHTML += `\n[${new Date().toLocaleTimeString()}] Scan cancelled.`;
+    }
+  </script>
+</body>
+</html>
