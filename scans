@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CommentSentinel Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+  <style>
+    :root {
+      --bg: #0e1012;
+      --fg: #f1f1f1;
+      --accent: #1e90ff;
+      --error: #ff4c4c;
+      --card-bg: #1c1f24;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: var(--card-bg);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: var(--accent);
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      background: #14171a;
+      padding: 1rem;
+      gap: 2rem;
+    }
+
+    nav a {
+      color: var(--fg);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: var(--accent);
+    }
+
+    .container {
+      padding: 2rem;
+    }
+
+    .log-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .log-item {
+      background: var(--card-bg);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+
+    .log-item h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+
+    .log-item small {
+      display: block;
+      color: #ccc;
+      margin-top: 0.3rem;
+    }
+
+    .log-item p {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><i class="fas fa-shield-alt"></i> CommentSentinel</h1>
+    <div>
+      <a class="btn btn-accent" href="/">← Back to Dashboard</a>
+    </div>
+  </header>
+
+  <nav>
+    <a href="/scans"><i class="fas fa-history"></i> All Scans</a>
+    <a href="/issues"><i class="fas fa-bug"></i> Flagged Issues</a>
+  </nav>
+
+  <main class="container">
+    <section id="scan-log" style="display: none">
+      <h2><i class="fas fa-history"></i> Scan History</h2>
+      <div class="log-list" id="scan-list">
+        <!-- Scan logs will go here -->
+      </div>
+    </section>
+
+    <section id="issue-log" style="display: none">
+      <h2><i class="fas fa-bug"></i> Flagged Issues</h2>
+      <div class="log-list" id="issue-list">
+        <!-- Issue logs will go here -->
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const page = location.pathname.includes("issues") ? "issues" : "scans";
+    document.getElementById("scan-log").style.display = page === "scans" ? "block" : "none";
+    document.getElementById("issue-log").style.display = page === "issues" ? "block" : "none";
+
+    const scanData = [
+      { id: "scan_001", target: "https://youtu.be/abc123", timestamp: "2025-05-10 14:22", status: "Completed" },
+      { id: "scan_002", target: "https://youtu.be/xyz456", timestamp: "2025-05-10 15:12", status: "Flagged 3 issues" },
+    ];
+
+    const issueData = [
+      { channel: "SpamBot123", comment: "Hot singles in your area 💋", video: "https://youtu.be/abc123", timestamp: "2025-05-10 14:24" },
+      { channel: "AI_Lure", comment: "Free crypto guide 🔥 click here", video: "https://youtu.be/xyz456", timestamp: "2025-05-10 15:14" },
+    ];
+
+    const scanList = document.getElementById("scan-list");
+    scanData.forEach(scan => {
+      const div = document.createElement("div");
+      div.className = "log-item";
+      div.innerHTML = `
+        <h3>${scan.id}</h3>
+        <small>${scan.timestamp}</small>
+        <p><strong>Target:</strong> <a href="${scan.target}" target="_blank">${scan.target}</a></p>
+        <p><strong>Status:</strong> ${scan.status}</p>
+      `;
+      scanList.appendChild(div);
+    });
+
+    const issueList = document.getElementById("issue-list");
+    issueData.forEach(issue => {
+      const div = document.createElement("div");
+      div.className = "log-item";
+      div.innerHTML = `
+        <h3>${issue.channel}</h3>
+        <small>${issue.timestamp}</small>
+        <p><strong>Comment:</strong> ${issue.comment}</p>
+        <p><strong>Video:</strong> <a href="${issue.video}" target="_blank">${issue.video}</a></p>
+      `;
+      issueList.appendChild(div);
+    });
+  </script>
+</body>
+</html>
